@@ -1,0 +1,17 @@
+syntax = "proto3";
+package contactical.contactical.v1;
+
+import "amino/amino.proto";
+import "contactical/contactical/v1/params.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "contactical/x/contactical/types";
+
+// GenesisState defines the contactical module's genesis state.
+message GenesisState {
+  // params defines all the parameters of the module.
+  Params params = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}

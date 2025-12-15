@@ -1,0 +1,13 @@
+syntax = "proto3";
+package contactical.contactical.v1;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "contactical/x/contactical/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (amino.name) = "contactical/x/contactical/Params";
+  option (gogoproto.equal) = true;
+}
