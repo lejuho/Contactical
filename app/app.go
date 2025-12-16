@@ -47,6 +47,7 @@ import (
 
 	"contactical/docs"
 	contacticalmodulekeeper "contactical/x/contactical/keeper"
+	realitymodulekeeper "contactical/x/reality/keeper"
 )
 
 const (
@@ -101,6 +102,7 @@ type App struct {
 	// simulation manager
 	sm                *module.SimulationManager
 	ContacticalKeeper contacticalmodulekeeper.Keeper
+	RealityKeeper     realitymodulekeeper.Keeper
 }
 
 func init() {
@@ -181,6 +183,7 @@ func New(
 		&app.CircuitBreakerKeeper,
 		&app.ParamsKeeper,
 		&app.ContacticalKeeper,
+		&app.RealityKeeper,
 	); err != nil {
 		panic(err)
 	}

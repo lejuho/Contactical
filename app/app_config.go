@@ -3,6 +3,8 @@ package app
 import (
 	_ "contactical/x/contactical/module"
 	contacticalmoduletypes "contactical/x/contactical/types"
+	_ "contactical/x/reality/module"
+	realitymoduletypes "contactical/x/reality/types"
 	"time"
 
 	runtimev1alpha1 "cosmossdk.io/api/cosmos/app/runtime/v1alpha1"
@@ -83,7 +85,7 @@ var (
 		{Account: nft.ModuleName},
 		{Account: ibctransfertypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner}},
 		{Account: icatypes.ModuleName},
-	}
+		{Account: realitymoduletypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner, authtypes.Staking}}}
 
 	// blocked account addresses
 	blockAccAddrs = []string{
@@ -126,6 +128,7 @@ var (
 						ibcexported.ModuleName,
 						// chain modules
 						contacticalmoduletypes.ModuleName,
+						realitymoduletypes.ModuleName,
 						// this line is used by starport scaffolding # stargate/app/beginBlockers
 					},
 					EndBlockers: []string{
@@ -135,6 +138,7 @@ var (
 						group.ModuleName,
 						// chain modules
 						contacticalmoduletypes.ModuleName,
+						realitymoduletypes.ModuleName,
 						// this line is used by starport scaffolding # stargate/app/endBlockers
 					},
 					// The following is mostly only needed when ModuleName != StoreKey name.
@@ -172,6 +176,7 @@ var (
 						icatypes.ModuleName,
 						// chain modules
 						contacticalmoduletypes.ModuleName,
+						realitymoduletypes.ModuleName,
 						// this line is used by starport scaffolding # stargate/app/initGenesis
 					},
 				}),
@@ -271,6 +276,10 @@ var (
 			{
 				Name:   contacticalmoduletypes.ModuleName,
 				Config: appconfig.WrapAny(&contacticalmoduletypes.Module{}),
+			},
+			{
+				Name:   realitymoduletypes.ModuleName,
+				Config: appconfig.WrapAny(&realitymoduletypes.Module{}),
 			},
 			// this line is used by starport scaffolding # stargate/app/moduleConfig
 		},
