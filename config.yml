@@ -10,9 +10,9 @@ accounts:
   coins:
   - 10000token
   - 100000000stake
-client:
-  openapi:
-    path: docs/static/openapi.json
+    #client:
+    #  openapi:
+    #    path: docs/static/openapi.json
 faucet:
   name: bob
   coins:
@@ -25,3 +25,8 @@ validators:
   bonded: 200000000stake
 - name: validator2
   bonded: 100000000stake
+# 예시 (이미 있을 수 있는 설정)
+build:
+  proto:
+    enable_openapi: false
+
