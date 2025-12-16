@@ -9,5 +9,6 @@ message Claim {
   string sensor_hash = 2;
   string gnss_hash = 3;
   string anchor_signature = 4;
-  string creator = 5; // <--- 이 줄을 꼭 추가하세요! (번호는 5번)
+  string creator = 5;
+  string trust_level = 6;  // 신뢰도 등급 추가
 }

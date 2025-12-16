@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"context"
 	"errors"
 
 	"contactical/x/reality/types"
@@ -28,18 +29,14 @@ func (k Keeper) GetClaimCount(ctx sdk.Context) (uint64, error) {
 
 // AppendClaim appends a claim in the store with a new id.
 func (k Keeper) AppendClaim(ctx sdk.Context, claim types.Claim) (uint64, error) {
-	// 1. 새로운 ID 발급 (Sequence 사용)
 	id, err := k.ClaimSeq.Next(ctx)
 	if err != nil {
 		return 0, err
 	}
 	claim.Id = id
-
-	// 2. Map에 저장
 	if err := k.Claim.Set(ctx, id, claim); err != nil {
 		return 0, err
 	}
-
 	return id, nil
 }
 
@@ -53,4 +50,26 @@ func (k Keeper) GetClaim(ctx sdk.Context, id uint64) (types.Claim, bool, error) 
 		return types.Claim{}, false, err
 	}
 	return claim, true, nil
+}
+
+// [추가] 특정 SensorHash가 이미 존재하는지 전수조사하는 함수
+// (참고: 데이터가 수백만 개가 되면 이 방식은 느려집니다. 나중엔 '인덱스'를 따로 만드는 게 좋습니다.)
+// [추가] Walk 기능을 사용하여 모든 데이터를 순회하며 중복을 찾습니다.
+func (k Keeper) IsSensorHashDuplicated(ctx context.Context, sensorHash string) (bool, error) {
+	var found bool
+
+	// k.Claim.Walk는 맵에 있는 모든 데이터를 하나씩 꺼내줍니다.
+	err := k.Claim.Walk(ctx, nil, func(key uint64, val types.Claim) (stop bool, err error) {
+		if val.SensorHash == sensorHash {
+			found = true
+			return true, nil // 찾았으니 순회 중단(Stop)
+		}
+		return false, nil // 계속 찾기
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	return found, nil
 }
