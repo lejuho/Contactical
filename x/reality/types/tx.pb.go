@@ -36,8 +36,6 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type MsgUpdateParams struct {
 	// authority is the address that controls the module (defaults to x/gov unless overwritten).
 	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
-	// params defines the module parameters to update.
-	//
 	// NOTE: All parameters must be supplied.
 	Params Params `protobuf:"bytes,2,opt,name=params,proto3" json:"params"`
 }
@@ -127,36 +125,153 @@ func (m *MsgUpdateParamsResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgUpdateParamsResponse proto.InternalMessageInfo
 
+// MsgCreateClaim defines the MsgCreateClaim message.
+type MsgCreateClaim struct {
+	Creator         string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	SensorHash      string `protobuf:"bytes,2,opt,name=sensor_hash,json=sensorHash,proto3" json:"sensor_hash,omitempty"`
+	GnssHash        string `protobuf:"bytes,3,opt,name=gnss_hash,json=gnssHash,proto3" json:"gnss_hash,omitempty"`
+	AnchorSignature string `protobuf:"bytes,4,opt,name=anchor_signature,json=anchorSignature,proto3" json:"anchor_signature,omitempty"`
+}
+
+func (m *MsgCreateClaim) Reset()         { *m = MsgCreateClaim{} }
+func (m *MsgCreateClaim) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateClaim) ProtoMessage()    {}
+func (*MsgCreateClaim) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ce4dcac2b70a4967, []int{2}
+}
+func (m *MsgCreateClaim) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreateClaim) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreateClaim.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreateClaim) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateClaim.Merge(m, src)
+}
+func (m *MsgCreateClaim) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreateClaim) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateClaim.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreateClaim proto.InternalMessageInfo
+
+func (m *MsgCreateClaim) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgCreateClaim) GetSensorHash() string {
+	if m != nil {
+		return m.SensorHash
+	}
+	return ""
+}
+
+func (m *MsgCreateClaim) GetGnssHash() string {
+	if m != nil {
+		return m.GnssHash
+	}
+	return ""
+}
+
+func (m *MsgCreateClaim) GetAnchorSignature() string {
+	if m != nil {
+		return m.AnchorSignature
+	}
+	return ""
+}
+
+// MsgCreateClaimResponse defines the MsgCreateClaimResponse message.
+type MsgCreateClaimResponse struct {
+}
+
+func (m *MsgCreateClaimResponse) Reset()         { *m = MsgCreateClaimResponse{} }
+func (m *MsgCreateClaimResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateClaimResponse) ProtoMessage()    {}
+func (*MsgCreateClaimResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ce4dcac2b70a4967, []int{3}
+}
+func (m *MsgCreateClaimResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreateClaimResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreateClaimResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreateClaimResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateClaimResponse.Merge(m, src)
+}
+func (m *MsgCreateClaimResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreateClaimResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateClaimResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreateClaimResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*MsgUpdateParams)(nil), "contactical.reality.v1.MsgUpdateParams")
 	proto.RegisterType((*MsgUpdateParamsResponse)(nil), "contactical.reality.v1.MsgUpdateParamsResponse")
+	proto.RegisterType((*MsgCreateClaim)(nil), "contactical.reality.v1.MsgCreateClaim")
+	proto.RegisterType((*MsgCreateClaimResponse)(nil), "contactical.reality.v1.MsgCreateClaimResponse")
 }
 
 func init() { proto.RegisterFile("contactical/reality/v1/tx.proto", fileDescriptor_ce4dcac2b70a4967) }
 
 var fileDescriptor_ce4dcac2b70a4967 = []byte{
-	// 334 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0x4f, 0xce, 0xcf, 0x2b,
-	0x49, 0x4c, 0x2e, 0xc9, 0x4c, 0x4e, 0xcc, 0xd1, 0x2f, 0x4a, 0x4d, 0xcc, 0xc9, 0x2c, 0xa9, 0xd4,
-	0x2f, 0x33, 0xd4, 0x2f, 0xa9, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x43, 0x52, 0xa0,
-	0x07, 0x55, 0xa0, 0x57, 0x66, 0x28, 0x25, 0x98, 0x98, 0x9b, 0x99, 0x97, 0xaf, 0x0f, 0x26, 0x21,
-	0x4a, 0xa5, 0xc4, 0x93, 0xf3, 0x8b, 0x73, 0xf3, 0x8b, 0xf5, 0x73, 0x8b, 0xd3, 0x41, 0x46, 0xe4,
-	0x16, 0xa7, 0x43, 0x25, 0x24, 0x21, 0x12, 0xf1, 0x60, 0x9e, 0x3e, 0x84, 0x03, 0x95, 0x12, 0x49,
-	0xcf, 0x4f, 0xcf, 0x87, 0x88, 0x83, 0x58, 0x50, 0x51, 0x65, 0x1c, 0xae, 0x2a, 0x48, 0x2c, 0x4a,
-	0xcc, 0x85, 0x6a, 0x55, 0x3a, 0xc6, 0xc8, 0xc5, 0xef, 0x5b, 0x9c, 0x1e, 0x5a, 0x90, 0x92, 0x58,
-	0x92, 0x1a, 0x00, 0x96, 0x11, 0x32, 0xe3, 0xe2, 0x4c, 0x2c, 0x2d, 0xc9, 0xc8, 0x2f, 0xca, 0x2c,
-	0xa9, 0x94, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x74, 0x92, 0xb8, 0xb4, 0x45, 0x57, 0x04, 0x6a, 0xa7,
-	0x63, 0x4a, 0x4a, 0x51, 0x6a, 0x71, 0x71, 0x70, 0x49, 0x51, 0x66, 0x5e, 0x7a, 0x10, 0x42, 0xa9,
-	0x90, 0x23, 0x17, 0x1b, 0xc4, 0x6c, 0x09, 0x26, 0x05, 0x46, 0x0d, 0x6e, 0x23, 0x39, 0x3d, 0xec,
-	0xde, 0xd6, 0x83, 0xd8, 0xe3, 0xc4, 0x79, 0xe2, 0x9e, 0x3c, 0xc3, 0x8a, 0xe7, 0x1b, 0xb4, 0x18,
-	0x83, 0xa0, 0x1a, 0xad, 0x2c, 0x9a, 0x9e, 0x6f, 0xd0, 0x42, 0x18, 0xd9, 0xf5, 0x7c, 0x83, 0x96,
-	0x2a, 0xb2, 0x37, 0x2a, 0xe0, 0x1e, 0x41, 0x73, 0xb4, 0x92, 0x24, 0x97, 0x38, 0x9a, 0x50, 0x50,
-	0x6a, 0x71, 0x41, 0x7e, 0x5e, 0x71, 0xaa, 0x51, 0x19, 0x17, 0xb3, 0x6f, 0x71, 0xba, 0x50, 0x06,
-	0x17, 0x0f, 0x8a, 0x37, 0xd5, 0x71, 0x39, 0x0f, 0xcd, 0x1c, 0x29, 0x7d, 0x22, 0x15, 0xc2, 0x2c,
-	0x94, 0x62, 0x6d, 0x00, 0x79, 0xca, 0xc9, 0xf4, 0xc4, 0x23, 0x39, 0xc6, 0x0b, 0x8f, 0xe4, 0x18,
-	0x1f, 0x3c, 0x92, 0x63, 0x9c, 0xf0, 0x58, 0x8e, 0xe1, 0xc2, 0x63, 0x39, 0x86, 0x1b, 0x8f, 0xe5,
-	0x18, 0xa2, 0xa4, 0xb1, 0xfb, 0xa9, 0xa4, 0xb2, 0x20, 0xb5, 0x38, 0x89, 0x0d, 0x1c, 0x33, 0xc6,
-	0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0xbe, 0xae, 0x26, 0xfe, 0x56, 0x02, 0x00, 0x00,
+	// 468 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x52, 0x31, 0x6f, 0xd3, 0x40,
+	0x14, 0xce, 0x51, 0x28, 0xf8, 0x52, 0x51, 0x38, 0x55, 0xad, 0xeb, 0x4a, 0x4e, 0x15, 0x04, 0x94,
+	0x48, 0xd8, 0x6a, 0x10, 0x08, 0x75, 0x6b, 0xba, 0xb0, 0x44, 0x42, 0xae, 0x58, 0x58, 0xa2, 0xc3,
+	0x39, 0x9d, 0x2d, 0xc5, 0x77, 0xd6, 0xbd, 0x6b, 0xd5, 0x6c, 0x88, 0x91, 0x89, 0x9f, 0xc1, 0x98,
+	0x81, 0x8d, 0x1d, 0x75, 0xac, 0x98, 0x58, 0x40, 0x28, 0x19, 0xf2, 0x37, 0x90, 0xef, 0x6c, 0xea,
+	0x46, 0x2d, 0x74, 0x89, 0xf2, 0xbe, 0xef, 0xbb, 0xf7, 0xbd, 0xf7, 0xf9, 0xe1, 0x56, 0x2c, 0x85,
+	0xa6, 0xb1, 0x4e, 0x63, 0x3a, 0x0a, 0x15, 0xa3, 0xa3, 0x54, 0x8f, 0xc3, 0xe3, 0xdd, 0x50, 0x9f,
+	0x04, 0xb9, 0x92, 0x5a, 0x92, 0xf5, 0x9a, 0x20, 0x28, 0x05, 0xc1, 0xf1, 0xae, 0x77, 0x9f, 0x66,
+	0xa9, 0x90, 0xa1, 0xf9, 0xb5, 0x52, 0xef, 0xc1, 0x15, 0xbd, 0x72, 0xaa, 0x68, 0x06, 0xa5, 0x68,
+	0x23, 0x96, 0x90, 0x49, 0x08, 0x33, 0xe0, 0x05, 0x97, 0x01, 0x2f, 0x89, 0x4d, 0x4b, 0x0c, 0x4c,
+	0x15, 0xda, 0xa2, 0xa4, 0xd6, 0xb8, 0xe4, 0xd2, 0xe2, 0xc5, 0x3f, 0x8b, 0xb6, 0xbf, 0x21, 0xbc,
+	0xda, 0x07, 0xfe, 0x26, 0x1f, 0x52, 0xcd, 0x5e, 0x1b, 0x0f, 0xf2, 0x02, 0x3b, 0xf4, 0x48, 0x27,
+	0x52, 0xa5, 0x7a, 0xec, 0xa2, 0x6d, 0xb4, 0xe3, 0xf4, 0xdc, 0xef, 0x5f, 0x9e, 0xae, 0x95, 0xed,
+	0xf6, 0x87, 0x43, 0xc5, 0x00, 0x0e, 0xb5, 0x4a, 0x05, 0x8f, 0xce, 0xa5, 0x64, 0x1f, 0x2f, 0xdb,
+	0x29, 0xdd, 0x1b, 0xdb, 0x68, 0xa7, 0xd9, 0xf5, 0x83, 0xcb, 0xd7, 0x0e, 0xac, 0x4f, 0xcf, 0x39,
+	0xfd, 0xd5, 0x6a, 0x7c, 0x9e, 0x4f, 0x3a, 0x28, 0x2a, 0x1f, 0xee, 0xbd, 0xfc, 0x30, 0x9f, 0x74,
+	0xce, 0x5b, 0x7e, 0x9c, 0x4f, 0x3a, 0x0f, 0xeb, 0x81, 0x9c, 0xfc, 0x8d, 0x64, 0x61, 0xe8, 0xf6,
+	0x26, 0xde, 0x58, 0x80, 0x22, 0x06, 0xb9, 0x14, 0xc0, 0xda, 0x5f, 0x11, 0xbe, 0xdb, 0x07, 0x7e,
+	0xa0, 0x18, 0xd5, 0xec, 0x60, 0x44, 0xd3, 0x8c, 0x74, 0xf1, 0xed, 0xb8, 0x28, 0xa5, 0xfa, 0xef,
+	0x82, 0x95, 0x90, 0xb4, 0x70, 0x13, 0x98, 0x00, 0xa9, 0x06, 0x09, 0x85, 0xc4, 0xec, 0xe8, 0x44,
+	0xd8, 0x42, 0xaf, 0x28, 0x24, 0x64, 0x0b, 0x3b, 0x5c, 0x00, 0x58, 0x7a, 0xc9, 0xd0, 0x77, 0x0a,
+	0xc0, 0x90, 0x4f, 0xf0, 0x3d, 0x2a, 0xe2, 0x44, 0xaa, 0x01, 0xa4, 0x5c, 0x50, 0x7d, 0xa4, 0x98,
+	0x7b, 0xd3, 0x68, 0x56, 0x2d, 0x7e, 0x58, 0xc1, 0x7b, 0x2b, 0x45, 0x08, 0x95, 0x6d, 0xdb, 0xc5,
+	0xeb, 0x17, 0x87, 0xaf, 0xf6, 0xea, 0xfe, 0x44, 0x78, 0xa9, 0x0f, 0x9c, 0x24, 0x78, 0xe5, 0xc2,
+	0xf7, 0x7b, 0x7c, 0x55, 0xee, 0x0b, 0x01, 0x79, 0xe1, 0x35, 0x85, 0x95, 0x23, 0x61, 0xb8, 0x59,
+	0x4f, 0xf1, 0xd1, 0x3f, 0xde, 0xd7, 0x74, 0x5e, 0x70, 0x3d, 0x5d, 0x65, 0xe3, 0xdd, 0x7a, 0x5f,
+	0x1c, 0x45, 0xef, 0xf9, 0xe9, 0xd4, 0x47, 0x67, 0x53, 0x1f, 0xfd, 0x9e, 0xfa, 0xe8, 0xd3, 0xcc,
+	0x6f, 0x9c, 0xcd, 0xfc, 0xc6, 0x8f, 0x99, 0xdf, 0x78, 0xbb, 0x75, 0xf9, 0x4d, 0xe8, 0x71, 0xce,
+	0xe0, 0xdd, 0xb2, 0xb9, 0xec, 0x67, 0x7f, 0x02, 0x00, 0x00, 0xff, 0xff, 0xc2, 0x28, 0x06, 0x95,
+	0x96, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -174,6 +289,8 @@ type MsgClient interface {
 	// UpdateParams defines a (governance) operation for updating the module
 	// parameters. The authority defaults to the x/gov module account.
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
+	// CreateClaim defines the CreateClaim RPC.
+	CreateClaim(ctx context.Context, in *MsgCreateClaim, opts ...grpc.CallOption) (*MsgCreateClaimResponse, error)
 }
 
 type msgClient struct {
@@ -193,11 +310,22 @@ func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts 
 	return out, nil
 }
 
+func (c *msgClient) CreateClaim(ctx context.Context, in *MsgCreateClaim, opts ...grpc.CallOption) (*MsgCreateClaimResponse, error) {
+	out := new(MsgCreateClaimResponse)
+	err := c.cc.Invoke(ctx, "/contactical.reality.v1.Msg/CreateClaim", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	// UpdateParams defines a (governance) operation for updating the module
 	// parameters. The authority defaults to the x/gov module account.
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
+	// CreateClaim defines the CreateClaim RPC.
+	CreateClaim(context.Context, *MsgCreateClaim) (*MsgCreateClaimResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -206,6 +334,9 @@ type UnimplementedMsgServer struct {
 
 func (*UnimplementedMsgServer) UpdateParams(ctx context.Context, req *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
+}
+func (*UnimplementedMsgServer) CreateClaim(ctx context.Context, req *MsgCreateClaim) (*MsgCreateClaimResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateClaim not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -230,6 +361,24 @@ func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_CreateClaim_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCreateClaim)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).CreateClaim(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/contactical.reality.v1.Msg/CreateClaim",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).CreateClaim(ctx, req.(*MsgCreateClaim))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var Msg_serviceDesc = _Msg_serviceDesc
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "contactical.reality.v1.Msg",
@@ -238,6 +387,10 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateParams",
 			Handler:    _Msg_UpdateParams_Handler,
+		},
+		{
+			MethodName: "CreateClaim",
+			Handler:    _Msg_CreateClaim_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -307,6 +460,80 @@ func (m *MsgUpdateParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgCreateClaim) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreateClaim) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreateClaim) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.AnchorSignature) > 0 {
+		i -= len(m.AnchorSignature)
+		copy(dAtA[i:], m.AnchorSignature)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.AnchorSignature)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.GnssHash) > 0 {
+		i -= len(m.GnssHash)
+		copy(dAtA[i:], m.GnssHash)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.GnssHash)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.SensorHash) > 0 {
+		i -= len(m.SensorHash)
+		copy(dAtA[i:], m.SensorHash)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.SensorHash)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgCreateClaimResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreateClaimResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreateClaimResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -334,6 +561,40 @@ func (m *MsgUpdateParams) Size() (n int) {
 }
 
 func (m *MsgUpdateParamsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgCreateClaim) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.SensorHash)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.GnssHash)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.AnchorSignature)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgCreateClaimResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -490,6 +751,234 @@ func (m *MsgUpdateParamsResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: MsgUpdateParamsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCreateClaim) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreateClaim: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreateClaim: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SensorHash", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SensorHash = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GnssHash", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.GnssHash = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AnchorSignature", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.AnchorSignature = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCreateClaimResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreateClaimResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreateClaimResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
