@@ -1,0 +1,13 @@
+syntax = "proto3";
+package contactical.reality.v1;
+
+option go_package = "contactical/x/reality/types";
+
+// Claim defines the Claim message.
+message Claim {
+  uint64 id = 1;
+  string sensor_hash = 2;
+  string gnss_hash = 3;
+  string anchor_signature = 4;
+  string creator = 5; // <--- 이 줄을 꼭 추가하세요! (번호는 5번)
+}

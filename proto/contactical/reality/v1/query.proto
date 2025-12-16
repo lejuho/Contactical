@@ -1,7 +1,9 @@
 syntax = "proto3";
+
 package contactical.reality.v1;
 
 import "amino/amino.proto";
+import "contactical/reality/v1/claim.proto";
 import "contactical/reality/v1/params.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "gogoproto/gogo.proto";
@@ -15,6 +17,16 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/contactical/reality/v1/params";
   }
+
+  // ListClaim Queries a list of Claim items.
+  rpc GetClaim(QueryGetClaimRequest) returns (QueryGetClaimResponse) {
+    option (google.api.http).get = "/contactical/reality/v1/claim/{id}";
+  }
+
+  // ListClaim defines the ListClaim RPC.
+  rpc ListClaim(QueryAllClaimRequest) returns (QueryAllClaimResponse) {
+    option (google.api.http).get = "/contactical/reality/v1/claim";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -27,4 +39,25 @@ message QueryParamsResponse {
     (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true
   ];
+}
+
+// QueryGetClaimRequest defines the QueryGetClaimRequest message.
+message QueryGetClaimRequest {
+  uint64 id = 1;
+}
+
+// QueryGetClaimResponse defines the QueryGetClaimResponse message.
+message QueryGetClaimResponse {
+  Claim claim = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryAllClaimRequest defines the QueryAllClaimRequest message.
+message QueryAllClaimRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllClaimResponse defines the QueryAllClaimResponse message.
+message QueryAllClaimResponse {
+  repeated Claim claim = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

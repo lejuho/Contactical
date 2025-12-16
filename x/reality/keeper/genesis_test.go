@@ -10,9 +10,10 @@ import (
 
 func TestGenesis(t *testing.T) {
 	genesisState := types.GenesisState{
-		Params: types.DefaultParams(),
+		Params:     types.DefaultParams(),
+		ClaimList:  []types.Claim{{Id: 0}, {Id: 1}},
+		ClaimCount: 2,
 	}
-
 	f := initFixture(t)
 	err := f.keeper.InitGenesis(f.ctx, genesisState)
 	require.NoError(t, err)
@@ -21,4 +22,7 @@ func TestGenesis(t *testing.T) {
 	require.NotNil(t, got)
 
 	require.EqualExportedValues(t, genesisState.Params, got.Params)
+	require.EqualExportedValues(t, genesisState.ClaimList, got.ClaimList)
+	require.Equal(t, genesisState.ClaimCount, got.ClaimCount)
+
 }

@@ -24,6 +24,8 @@ type Keeper struct {
 
 	bankKeeper    types.BankKeeper
 	stakingKeeper types.StakingKeeper
+	ClaimSeq      collections.Sequence
+	Claim         collections.Map[uint64, types.Claim]
 }
 
 func NewKeeper(
@@ -50,8 +52,9 @@ func NewKeeper(
 		bankKeeper:    bankKeeper,
 		stakingKeeper: stakingKeeper,
 		Params:        collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
+		Claim:         collections.NewMap(sb, types.ClaimKey, "claim", collections.Uint64Key, codec.CollValue[types.Claim](cdc)),
+		ClaimSeq:      collections.NewSequence(sb, types.ClaimCountKey, "claimSequence"),
 	}
-
 	schema, err := sb.Build()
 	if err != nil {
 		panic(err)

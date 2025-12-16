@@ -17,3 +17,8 @@ const (
 
 // ParamsKey is the prefix to retrieve all Params
 var ParamsKey = collections.NewPrefix("p_reality")
+
+var (
+	ClaimKey      = collections.NewPrefix("claim/value/")
+	ClaimCountKey = collections.NewPrefix("claim/count/")
+)
