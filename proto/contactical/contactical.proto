@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package contactical.v1;
+
+// Go 패키지 경로 설정 (나중에 L1 체인 통합 시 필요)
+option go_package = "contactical/api/v1";
+
+// 1. 서비스 정의: 서버가 제공할 기능들의 목록
+service ContacticalService {
+  // 노드 등록 (Key Attestation 검증 포함)
+  rpc RegisterNode(RegisterNodeRequest) returns (RegisterNodeResponse);
+  
+  // 센서 데이터 제출 (TEE 서명 검증 포함)
+  rpc SubmitData(SubmitDataRequest) returns (SubmitDataResponse);
+}
+
+// 2. 메시지 정의: 주고받을 데이터의 구조
+
+// 노드 등록 요청
+message RegisterNodeRequest {
+  string creator_address = 1;      // 사용자의 지갑 주소
+  repeated string cert_chain = 2;  // Android에서 보낸 인증서 체인 (Base64 리스트)
+  string challenge = 3;            // 서버에서 받은 챌린지 값
+}
+
+message RegisterNodeResponse {
+  bool success = 1;
+  string message = 2;
+  string node_id = 3;              // 등록 성공 시 부여되는 고유 ID
+}
+
+// 데이터 제출 요청
+message SubmitDataRequest {
+  string node_id = 1;              // 등록된 노드 ID
+  string payload = 2;              // 실제 데이터 (예: "lat: 37.5, lon: 127.0")
+  string signature = 3;            // TEE로 만든 서명 (Base64)
+  string cert = 4;                 // (선택) 검증을 위한 리프 인증서
+}
+
+message SubmitDataResponse {
+  bool success = 1;
+  string tx_hash = 2;              // 블록체인에 기록된 트랜잭션 해시
+}

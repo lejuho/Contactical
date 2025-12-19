@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package contactical.reality.v1;
+
+option go_package = "contactical/x/reality/types";
+
+// NodeInfo stores attestation information for a registered node
+message NodeInfo {
+  string creator = 1;              // Node creator address
+  int32 security_level = 2;        // TEE security level (0=Software, 1=TEE, 2=StrongBox)
+  bool device_locked = 3;          // Whether device bootloader is locked
+  int32 boot_state = 4;            // Verified boot state (0=verified, 1=self-signed, 2=unverified)
+  int64 creation_time = 5;         // Key creation timestamp (milliseconds)
+  int32 attestation_level = 6;     // Attestation version
+  int32 os_version = 7;            // Android OS version
+  int32 os_patch_level = 8;        // Android OS patch level
+  int64 registered_at = 9;         // Block height when registered
+  bytes pub_key = 10;              // TEE public key for data signature verification
+}

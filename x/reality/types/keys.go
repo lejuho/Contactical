@@ -21,4 +21,5 @@ var ParamsKey = collections.NewPrefix("p_reality")
 var (
 	ClaimKey      = collections.NewPrefix("claim/value/")
 	ClaimCountKey = collections.NewPrefix("claim/count/")
+	NodeInfoKey   = collections.NewPrefix("node/info/")
 )

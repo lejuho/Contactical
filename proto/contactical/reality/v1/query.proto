@@ -4,6 +4,7 @@ package contactical.reality.v1;
 
 import "amino/amino.proto";
 import "contactical/reality/v1/claim.proto";
+import "contactical/reality/v1/node.proto";
 import "contactical/reality/v1/params.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "gogoproto/gogo.proto";
@@ -26,6 +27,11 @@ service Query {
   // ListClaim defines the ListClaim RPC.
   rpc ListClaim(QueryAllClaimRequest) returns (QueryAllClaimResponse) {
     option (google.api.http).get = "/contactical/reality/v1/claim";
+  }
+
+  // GetNodeInfo queries node information by creator address.
+  rpc GetNodeInfo(QueryGetNodeInfoRequest) returns (QueryGetNodeInfoResponse) {
+    option (google.api.http).get = "/contactical/reality/v1/node/{creator}";
   }
 }
 
@@ -60,4 +66,14 @@ message QueryAllClaimRequest {
 message QueryAllClaimResponse {
   repeated Claim claim = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryGetNodeInfoRequest defines the QueryGetNodeInfoRequest message.
+message QueryGetNodeInfoRequest {
+  string creator = 1;
+}
+
+// QueryGetNodeInfoResponse defines the QueryGetNodeInfoResponse message.
+message QueryGetNodeInfoResponse {
+  NodeInfo node_info = 1 [(gogoproto.nullable) = false];
 }

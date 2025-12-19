@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"contactical/x/reality/types"
 
@@ -23,18 +24,64 @@ func (k msgServer) CreateClaim(goCtx context.Context, msg *types.MsgCreateClaim)
 	if msg.GnssHash == "" {
 		return nil, fmt.Errorf("gnss hash cannot be empty")
 	}
-	// AnchorSignature 필수 체크 삭제
+
+	// ============================================================
+	// TEE Signature Verification (V6.0 Hardware-Native Verification)
+	// ============================================================
 
 	var verificationStatus string
-	if msg.AnchorSignature == "" {
-		verificationStatus = "GPS_ONLY"
-		ctx.Logger().Info("Claim accepted without Anchor (Low Trust)")
+
+	// Check if node is registered and verify TEE signature
+	nodeInfo, err := k.NodeInfo.Get(ctx, msg.Creator)
+	if err != nil {
+		// Node not registered - allow with low trust level
+		ctx.Logger().Info("Node not registered, accepting with LOW_TRUST", "creator", msg.Creator)
+		verificationStatus = "UNREGISTERED_NODE"
 	} else {
-		if len(msg.AnchorSignature) < 10 {
-			return nil, fmt.Errorf("invalid anchor signature format")
+		// Node is registered - verify TEE signature
+		if len(msg.DataSignature) == 0 {
+			return nil, fmt.Errorf("data_signature required for registered nodes")
 		}
-		verificationStatus = "ANCHOR_VERIFIED"
-		ctx.Logger().Info("Claim accepted with Valid Anchor (High Trust)")
+
+		// Verify timestamp is recent (within 5 minutes)
+		now := time.Now().Unix()
+		if msg.Timestamp == 0 || now-msg.Timestamp > 300 || msg.Timestamp-now > 60 {
+			return nil, fmt.Errorf("invalid timestamp: must be within 5 minutes")
+		}
+
+		// Verify signature using registered TEE public key
+		if err := types.VerifyDataSignatureAuto(
+			nodeInfo.PubKey,
+			msg.DataSignature,
+			msg.SensorHash,
+			msg.GnssHash,
+			msg.Timestamp,
+		); err != nil {
+			return nil, fmt.Errorf("TEE signature verification failed: %w", err)
+		}
+
+		ctx.Logger().Info("TEE signature verified successfully", "creator", msg.Creator)
+
+		// Determine trust level based on anchor + TEE
+		if msg.AnchorSignature == "" {
+			verificationStatus = "TEE_VERIFIED"
+		} else {
+			verificationStatus = "TEE_AND_ANCHOR_VERIFIED"
+		}
+	}
+
+	// Legacy anchor-only verification for unregistered nodes
+	if verificationStatus == "UNREGISTERED_NODE" {
+		if msg.AnchorSignature == "" {
+			verificationStatus = "GPS_ONLY"
+			ctx.Logger().Info("Claim accepted without Anchor (Low Trust)")
+		} else {
+			if len(msg.AnchorSignature) < 10 {
+				return nil, fmt.Errorf("invalid anchor signature format")
+			}
+			verificationStatus = "ANCHOR_ONLY"
+			ctx.Logger().Info("Claim accepted with Anchor only (Medium Trust)")
+		}
 	}
 
 	isDuplicate, err := k.IsSensorHashDuplicated(ctx, msg.SensorHash)

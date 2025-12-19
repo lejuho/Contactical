@@ -26,6 +26,7 @@ type Keeper struct {
 	stakingKeeper types.StakingKeeper
 	ClaimSeq      collections.Sequence
 	Claim         collections.Map[uint64, types.Claim]
+	NodeInfo      collections.Map[string, types.NodeInfo]
 }
 
 func NewKeeper(
@@ -54,6 +55,7 @@ func NewKeeper(
 		Params:        collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
 		Claim:         collections.NewMap(sb, types.ClaimKey, "claim", collections.Uint64Key, codec.CollValue[types.Claim](cdc)),
 		ClaimSeq:      collections.NewSequence(sb, types.ClaimCountKey, "claimSequence"),
+		NodeInfo:      collections.NewMap(sb, types.NodeInfoKey, "nodeInfo", collections.StringKey, codec.CollValue[types.NodeInfo](cdc)),
 	}
 	schema, err := sb.Build()
 	if err != nil {
