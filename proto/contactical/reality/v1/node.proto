@@ -15,5 +15,6 @@ message NodeInfo {
   int32 os_version = 7;            // Android OS version
   int32 os_patch_level = 8;        // Android OS patch level
   int64 registered_at = 9;         // Block height when registered
-  bytes pub_key = 10;              // TEE public key for data signature verification
+  // [수정] bytes -> string
+  string pub_key = 10; // 필드 번호는 본인 파일에 맞게 유지
 }

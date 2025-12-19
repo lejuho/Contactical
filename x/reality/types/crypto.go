@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
-	"encoding/hex"
 	"fmt"
 )
 

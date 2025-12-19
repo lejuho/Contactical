@@ -34,7 +34,6 @@ message MsgUpdateParams {
   string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   // params defines the module parameters to update.
-
   // NOTE: All parameters must be supplied.
   Params params = 2 [
     (gogoproto.nullable) = false,
@@ -49,12 +48,27 @@ message MsgUpdateParamsResponse {}
 // MsgCreateClaim defines the MsgCreateClaim message.
 message MsgCreateClaim {
   option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "contactical/x/reality/MsgCreateClaim";
+
   string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  
+  // [기존 필드 유지] DePIN 비즈니스 로직용
   string sensor_hash = 2;
   string gnss_hash = 3;
   string anchor_signature = 4;
-  bytes  data_signature = 5;     // TEE signature over (sensor_hash || gnss_hash)
-  int64  timestamp = 6;          // Unix timestamp when data was signed
+  string data_signature = 5;      
+  int64  timestamp = 6;
+
+  // [추가 필드 1] 안드로이드 앱이 보낸 "Hello Contactical" 같은 원본 데이터
+  // Go Keeper의 VerifyDataSignature(payload, ...)에서 사용됨
+  string payload = 7;
+
+  // [추가 필드 2] 서명 검증에 사용할 리프 인증서 (Base64)
+  // Go Keeper의 VerifyDataSignature(..., cert)에서 사용됨
+  string cert = 8;
+  
+  // [추가 필드 3] (선택) 안드로이드 앱이 보내는 node_id
+  string node_id = 9;
 }
 
 // MsgCreateClaimResponse defines the MsgCreateClaimResponse message.
@@ -66,8 +80,16 @@ message MsgRegisterNode {
   option (amino.name) = "contactical/x/reality/MsgRegisterNode";
 
   string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  bytes  attestation_cert = 2;
-  bytes  pub_key = 3;
+  
+  // [핵심 수정 1] Go 코드의 msg.CertChain (리스트)과 맞춤
+  // repeated string: 여러 개의 인증서(Base64 문자열)를 리스트로 받음
+  repeated string cert_chain = 2; 
+
+  // [핵심 수정 2] Go 코드의 msg.Challenge와 맞춤
+  string challenge = 3;
+
+  // [핵심 수정 3] Go 코드의 msg.PubKey와 맞춤
+  string pub_key = 4;
 }
 
 // MsgRegisterNodeResponse defines the MsgRegisterNodeResponse message.
