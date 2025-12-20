@@ -7,6 +7,7 @@ import (
 	"cosmossdk.io/core/address"
 	corestore "cosmossdk.io/core/store"
 	"github.com/cosmos/cosmos-sdk/codec"
+	sdk "github.com/cosmos/cosmos-sdk/types"  // ← 이 줄 추가
 
 	"contactical/x/reality/types"
 )
@@ -28,6 +29,14 @@ type Keeper struct {
 	ClaimSeq      collections.Sequence
 	Claim         collections.Map[uint64, types.Claim]
 	NodeInfo      collections.Map[string, types.NodeInfo]
+}
+
+type AttestationResult struct {
+	IsHardwareBacked bool
+	IsStrongBox      bool
+	OSVersion        int
+	PatchLevel       int
+	VerifiedBoot     string // "Verified", "SelfSigned", "Unverified", "Failed"
 }
 
 func NewKeeper(
@@ -70,4 +79,17 @@ func NewKeeper(
 // GetAuthority returns the module's authority.
 func (k Keeper) GetAuthority() []byte {
 	return k.authority
+}
+
+func (k Keeper) GetParams(ctx sdk.Context) (types.Params, error) {
+    params, err := k.Params.Get(ctx)
+    if err != nil {
+        return types.Params{}, err
+    }
+    return params, nil
+}
+
+// SetParams sets the params in the store
+func (k Keeper) SetParams(ctx sdk.Context, params types.Params) error {
+    return k.Params.Set(ctx, params)
 }

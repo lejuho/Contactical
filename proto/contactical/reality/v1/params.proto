@@ -6,8 +6,21 @@ import "gogoproto/gogo.proto";
 
 option go_package = "contactical/x/reality/types";
 
-// Params defines the parameters for the module.
+// Params는 reality 모듈의 매개변수를 정의합니다.
 message Params {
   option (amino.name) = "contactical/x/reality/Params";
   option (gogoproto.equal) = true;
+
+  // 보상 계산의 기본 단위 (기존 1000)
+  int64 reward_base_unit = 1;
+  // StrongBox 가산점 (기존 50)
+  int32 bonus_strongbox = 2;
+  // 일반 TEE 가산점 (기존 30)
+  int32 bonus_tee = 3;
+  // 부트 락(Verified Boot) 가산점 (기존 10)
+  int32 bonus_boot_lock = 4;
+  // 주변 노드당 밀집도 가산점 (기존 20)
+  int32 bonus_density_per_node = 5;
+  // 최대 신뢰 점수 제한 (기존 100)
+  int32 max_trust_score = 6;
 }
