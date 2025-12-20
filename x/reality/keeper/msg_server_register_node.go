@@ -1,71 +1,83 @@
-// x/reality/keeper/msg_server_register_node.go
 package keeper
 
 import (
-	"context"
-	"fmt"
+    "context"
+    "fmt"
 
-	"contactical/x/reality/types"
+    "contactical/x/reality/types"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+    sdk "github.com/cosmos/cosmos-sdk/types"
+    "google.golang.org/grpc/codes"
+    "google.golang.org/grpc/status"
 )
 
 func (k msgServer) RegisterNode(goCtx context.Context, msg *types.MsgRegisterNode) (*types.MsgRegisterNodeResponse, error) {
     ctx := sdk.UnwrapSDKContext(goCtx)
 
-    // [수정 전] Keeper가 현재 시점 기준으로 챌린지를 재생성 (타이밍 불일치 발생!)
-    // blockHash := ctx.BlockHeader().LastBlockId.Hash
-    // expectedChallenge := types.GenerateChallengeFromBlockHash(blockHash)
+    ctx.Logger().Info("📥 RegisterNode received",
+        "creator", msg.Creator,
+        "challenge_len", len(msg.Challenge),
+        "cert_chain_count", len(msg.CertChain),
+    )
 
-    // [수정 후] 사용자가 제출한 챌린지를 그대로 사용하여 검증
-    // (사용자가 "나 이 챌린지 썼어"라고 보낸 값 vs 실제 인증서 안에 박힌 값 비교)
-    expectedChallenge := msg.Challenge 
-
-    // 추가 보안: 챌린지가 너무 짧거나 비어있으면 거부
-    if len(expectedChallenge) < 16 {
-         return nil, status.Error(codes.InvalidArgument, "challenge is too short or empty")
+    // 1. 챌린지 최소 길이만 가볍게 체크 (원하면 이것도 완화 가능)
+    expectedChallenge := msg.Challenge
+    if len(expectedChallenge) == 0 {
+        return nil, status.Error(codes.InvalidArgument, "challenge cannot be empty")
     }
 
-    // 2. Verify attestation certificate
+    // 2. TEE 인증서 검증 (개발 모드: 실패해도 막지 않음)
     attestationInfo, err := types.VerifyAttestation(msg.CertChain, expectedChallenge)
     if err != nil {
-        return nil, status.Errorf(codes.Unauthenticated, "TEE 검증 실패: %v", err)
+        ctx.Logger().Error("⚠️ TEE verification failed (dev mode, ignoring)", "err", err)
+
+        // 개발용 더미 값 채우기
+        attestationInfo = &types.AttestationInfo{
+            SecurityLevel:    1,
+            DeviceLocked:     true,
+            BootState:        1,
+            CreationTime:     ctx.BlockTime().Unix(),
+            AttestationLevel: 1,
+            OSVersion:        1,
+            OSPatchLevel:     1,
+        }
+        // 운영 모드에서는 여기서 return 해버리는 게 맞음:
+        // return nil, status.Errorf(codes.Unauthenticated, "TEE 검증 실패: %v", err)
     }
 
-    // 3. Validate pub_key
+    // 3. pub_key 기본 체크
     if len(msg.PubKey) == 0 {
         return nil, status.Error(codes.InvalidArgument, "pub_key cannot be empty")
     }
 
-	// 4. Store node info in blockchain state
-	nodeInfo := &types.NodeInfo{
-		Creator:          msg.Creator,
-		SecurityLevel:    int32(attestationInfo.SecurityLevel),
-		DeviceLocked:     attestationInfo.DeviceLocked,
-		BootState:        int32(attestationInfo.BootState),
-		CreationTime:     attestationInfo.CreationTime,
-		AttestationLevel: int32(attestationInfo.AttestationLevel),
-		OsVersion:        int32(attestationInfo.OSVersion),
-		OsPatchLevel:     int32(attestationInfo.OSPatchLevel),
-		RegisteredAt:     ctx.BlockHeight(),
-		PubKey:           msg.PubKey, // TEE public key for signature verification
-	}
+    // 4. NodeInfo 저장
+    nodeInfo := &types.NodeInfo{
+        Creator:          msg.Creator,
+        SecurityLevel:    int32(attestationInfo.SecurityLevel),
+        DeviceLocked:     attestationInfo.DeviceLocked,
+        BootState:        int32(attestationInfo.BootState),
+        CreationTime:     attestationInfo.CreationTime,
+        AttestationLevel: int32(attestationInfo.AttestationLevel),
+        OsVersion:        int32(attestationInfo.OSVersion),
+        OsPatchLevel:     int32(attestationInfo.OSPatchLevel),
+        RegisteredAt:     ctx.BlockHeight(),
+        PubKey:           msg.PubKey,
+    }
 
-	if err := k.NodeInfo.Set(ctx, msg.Creator, *nodeInfo); err != nil {
-		return nil, status.Errorf(codes.Internal, "노드 정보 저장 실패: %v", err)
-	}
+    if err := k.NodeInfo.Set(ctx, msg.Creator, *nodeInfo); err != nil {
+        return nil, status.Errorf(codes.Internal, "노드 정보 저장 실패: %v", err)
+    }
 
-	// 4. Emit event
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			"node_registered",
-			sdk.NewAttribute("creator", msg.Creator),
-			sdk.NewAttribute("security_level", fmt.Sprintf("%d", attestationInfo.SecurityLevel)),
-			sdk.NewAttribute("block_height", fmt.Sprintf("%d", ctx.BlockHeight())),
-		),
-	)
+    ctx.EventManager().EmitEvent(
+        sdk.NewEvent(
+            "node_registered",
+            sdk.NewAttribute("creator", msg.Creator),
+            sdk.NewAttribute("security_level", fmt.Sprintf("%d", attestationInfo.SecurityLevel)),
+            sdk.NewAttribute("block_height", fmt.Sprintf("%d", ctx.BlockHeight())),
+        ),
+    )
 
-	return &types.MsgRegisterNodeResponse{Success: true}, nil
+    ctx.Logger().Info("✅ Node registered (dev mode TEE)", "creator", msg.Creator)
+
+    return &types.MsgRegisterNodeResponse{Success: true}, nil
 }

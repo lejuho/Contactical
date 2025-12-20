@@ -69,6 +69,7 @@ message MsgCreateClaim {
   
   // [추가 필드 3] (선택) 안드로이드 앱이 보내는 node_id
   string node_id = 9;
+  repeated string nearby_nodes = 10;
 }
 
 // MsgCreateClaimResponse defines the MsgCreateClaimResponse message.

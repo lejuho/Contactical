@@ -19,12 +19,8 @@ faucet:
   - 5token
   - 100000stake
 validators:
-- name: alice
-  bonded: 100000000stake
-- name: validator1
-  bonded: 200000000stake
-- name: validator2
-  bonded: 100000000stake
+  - name: alice
+    bonded: 100000000stake
 # 예시 (이미 있을 수 있는 설정)
 build:
   proto:

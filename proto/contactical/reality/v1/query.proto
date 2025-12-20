@@ -33,6 +33,11 @@ service Query {
   rpc GetNodeInfo(QueryGetNodeInfoRequest) returns (QueryGetNodeInfoResponse) {
     option (google.api.http).get = "/contactical/reality/v1/node/{creator}";
   }
+
+  // service Query에 추가
+rpc AllNodeInfo(QueryAllNodeInfoRequest) returns (QueryAllNodeInfoResponse) {
+  option (google.api.http).get = "/contactical/reality/node_info";
+}
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -77,3 +82,14 @@ message QueryGetNodeInfoRequest {
 message QueryGetNodeInfoResponse {
   NodeInfo node_info = 1 [(gogoproto.nullable) = false];
 }
+
+message QueryAllNodeInfoRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllNodeInfoResponse {
+  repeated NodeInfo node_info = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+

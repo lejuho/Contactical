@@ -13,4 +13,6 @@ message Claim {
   string trust_level = 6;  // 신뢰도 등급 추가
   // [수정] bytes -> string (Base64 호환성)
   string data_signature = 7; // 필드 번호가 다를 수 있으니 본인 파일에 맞춰 추가/수정하세요
+  int32 trust_score = 8;        // 계산된 신뢰 점수 (0~100)
+  int32 reward_multiplier = 9;  // 검열 지역 등 가중치 (1x, 2x...)
 }
