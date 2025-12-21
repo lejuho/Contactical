@@ -13,14 +13,14 @@ message Params {
 
   // 보상 계산의 기본 단위 (기존 1000)
   int64 reward_base_unit = 1;
-  // StrongBox 가산점 (기존 50)
-  int32 bonus_strongbox = 2;
-  // 일반 TEE 가산점 (기존 30)
-  int32 bonus_tee = 3;
-  // 부트 락(Verified Boot) 가산점 (기존 10)
-  int32 bonus_boot_lock = 4;
-  // 주변 노드당 밀집도 가산점 (기존 20)
-  int32 bonus_density_per_node = 5;
+  
   // 최대 신뢰 점수 제한 (기존 100)
-  int32 max_trust_score = 6;
+  int64 max_trust_score = 2;
+
+  // [신규] 보상 계산을 위한 최소 점수 임계값
+  int64 min_score_threshold = 3;
+
+  // [신규] 보안 요소별 가중치 (기존 개별 필드 대체, 확장성 확보)
+  // 예: "strongbox": 50, "tee": 30, "boot_lock": 10, "density": 20
+  map<string, int32> security_weights = 4;
 }

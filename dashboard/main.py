@@ -27,11 +27,23 @@ def get_claims():
     features = []
 
     for claim in claims:
-        # [핵심] 랜덤 로직을 완전히 지우고, 블록체인에 저장된 좌표를 사용합니다.
-        # 만약 타입이 string으로 바뀌었다면 float()로 변환이 필요합니다.
+        # [수정] 블록체인에 저장된 int64 좌표를 1,000,000으로 나누어 복원
         try:
-            lat = float(claim.get("latitude", 37.5665))
-            lng = float(claim.get("longitude", 126.9780))
+            raw_lat = float(claim.get("latitude", 37566500))
+            raw_lng = float(claim.get("longitude", 126978000))
+
+            # 값이 정수형 포맷(큰 수)일 경우에만 나누기 수행
+            # 위도 범위(-90~90)를 고려하여 절대값이 1000보다 크면 나눗셈 수행
+            if abs(raw_lat) > 1000:
+                lat = raw_lat / 1000000.0
+            else:
+                lat = raw_lat
+
+            if abs(raw_lng) > 1000:
+                lng = raw_lng / 1000000.0
+            else:
+                lng = raw_lng
+
         except (ValueError, TypeError):
             lat, lng = 37.5665, 126.9780 # 실패 시 기본값
 

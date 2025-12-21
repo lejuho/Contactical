@@ -72,9 +72,15 @@ message MsgCreateClaim {
   
   // [추가 필드 3] (선택) 안드로이드 앱이 보내는 node_id
   string node_id = 9;
-  string latitude = 10;   // double -> string
-  string longitude = 11;  // double -> string
-  repeated string nearby_nodes = 12; // 가변 인자는 마지막에
+  
+  // [Gas Optimization] string -> int64 (클라이언트가 1,000,000 곱해서 전송)
+  int64 latitude = 10;
+  int64 longitude = 11;
+  
+  repeated string nearby_nodes = 12; 
+
+  // [유연성 확보] 미래의 보안 하드웨어/소프트웨어 검증 데이터를 위한 범용 필드
+  map<string, string> extra_attestation = 13;
 }
 
 // MsgCreateClaimResponse defines the MsgCreateClaimResponse message.

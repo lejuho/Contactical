@@ -8,3 +8,5 @@ release/
 *.log
 *.ign
 go*.tar.gz
+main
+main.go

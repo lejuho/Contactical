@@ -28,16 +28,13 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type Params struct {
 	// 보상 계산의 기본 단위 (기존 1000)
 	RewardBaseUnit int64 `protobuf:"varint,1,opt,name=reward_base_unit,json=rewardBaseUnit,proto3" json:"reward_base_unit,omitempty"`
-	// StrongBox 가산점 (기존 50)
-	BonusStrongbox int32 `protobuf:"varint,2,opt,name=bonus_strongbox,json=bonusStrongbox,proto3" json:"bonus_strongbox,omitempty"`
-	// 일반 TEE 가산점 (기존 30)
-	BonusTee int32 `protobuf:"varint,3,opt,name=bonus_tee,json=bonusTee,proto3" json:"bonus_tee,omitempty"`
-	// 부트 락(Verified Boot) 가산점 (기존 10)
-	BonusBootLock int32 `protobuf:"varint,4,opt,name=bonus_boot_lock,json=bonusBootLock,proto3" json:"bonus_boot_lock,omitempty"`
-	// 주변 노드당 밀집도 가산점 (기존 20)
-	BonusDensityPerNode int32 `protobuf:"varint,5,opt,name=bonus_density_per_node,json=bonusDensityPerNode,proto3" json:"bonus_density_per_node,omitempty"`
 	// 최대 신뢰 점수 제한 (기존 100)
-	MaxTrustScore int32 `protobuf:"varint,6,opt,name=max_trust_score,json=maxTrustScore,proto3" json:"max_trust_score,omitempty"`
+	MaxTrustScore int64 `protobuf:"varint,2,opt,name=max_trust_score,json=maxTrustScore,proto3" json:"max_trust_score,omitempty"`
+	// [신규] 보상 계산을 위한 최소 점수 임계값
+	MinScoreThreshold int64 `protobuf:"varint,3,opt,name=min_score_threshold,json=minScoreThreshold,proto3" json:"min_score_threshold,omitempty"`
+	// [신규] 보안 요소별 가중치 (기존 개별 필드 대체, 확장성 확보)
+	// 예: "strongbox": 50, "tee": 30, "boot_lock": 10, "density": 20
+	SecurityWeights map[string]int32 `protobuf:"bytes,4,rep,name=security_weights,json=securityWeights,proto3" json:"security_weights,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
 }
 
 func (m *Params) Reset()         { *m = Params{} }
@@ -80,43 +77,30 @@ func (m *Params) GetRewardBaseUnit() int64 {
 	return 0
 }
 
-func (m *Params) GetBonusStrongbox() int32 {
-	if m != nil {
-		return m.BonusStrongbox
-	}
-	return 0
-}
-
-func (m *Params) GetBonusTee() int32 {
-	if m != nil {
-		return m.BonusTee
-	}
-	return 0
-}
-
-func (m *Params) GetBonusBootLock() int32 {
-	if m != nil {
-		return m.BonusBootLock
-	}
-	return 0
-}
-
-func (m *Params) GetBonusDensityPerNode() int32 {
-	if m != nil {
-		return m.BonusDensityPerNode
-	}
-	return 0
-}
-
-func (m *Params) GetMaxTrustScore() int32 {
+func (m *Params) GetMaxTrustScore() int64 {
 	if m != nil {
 		return m.MaxTrustScore
 	}
 	return 0
 }
 
+func (m *Params) GetMinScoreThreshold() int64 {
+	if m != nil {
+		return m.MinScoreThreshold
+	}
+	return 0
+}
+
+func (m *Params) GetSecurityWeights() map[string]int32 {
+	if m != nil {
+		return m.SecurityWeights
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*Params)(nil), "contactical.reality.v1.Params")
+	proto.RegisterMapType((map[string]int32)(nil), "contactical.reality.v1.Params.SecurityWeightsEntry")
 }
 
 func init() {
@@ -124,29 +108,30 @@ func init() {
 }
 
 var fileDescriptor_6500cda98d68c26f = []byte{
-	// 341 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x90, 0xb1, 0x4e, 0x32, 0x41,
-	0x14, 0x85, 0x59, 0xf8, 0x21, 0xbf, 0x9b, 0x88, 0xba, 0x1a, 0xb2, 0x01, 0xb3, 0x12, 0x8d, 0x4a,
-	0x2c, 0xd8, 0x10, 0x62, 0x63, 0x49, 0x2c, 0x8d, 0x21, 0x80, 0x8d, 0xcd, 0x64, 0x76, 0xf7, 0x86,
-	0x6c, 0x60, 0xe7, 0x6e, 0x66, 0x2e, 0xb8, 0xbc, 0x82, 0x95, 0x8f, 0x60, 0xe1, 0x03, 0xf8, 0x18,
-	0x96, 0x94, 0x96, 0x06, 0x0a, 0x7d, 0x0c, 0xc3, 0x8c, 0x18, 0x0a, 0x9b, 0xc9, 0xcd, 0x77, 0xbe,
-	0x39, 0xc5, 0xb1, 0x4f, 0x42, 0x14, 0xc4, 0x43, 0x8a, 0x43, 0x3e, 0xf6, 0x25, 0xf0, 0x71, 0x4c,
-	0x33, 0x7f, 0xda, 0xf2, 0x53, 0x2e, 0x79, 0xa2, 0x9a, 0xa9, 0x44, 0x42, 0xa7, 0xb2, 0x21, 0x35,
-	0x7f, 0xa4, 0xe6, 0xb4, 0x55, 0xdd, 0xe3, 0x49, 0x2c, 0xd0, 0xd7, 0xaf, 0x51, 0xab, 0x07, 0x43,
-	0x1c, 0xa2, 0x3e, 0xfd, 0xd5, 0x65, 0xe8, 0xf1, 0x4b, 0xde, 0x2e, 0x75, 0x75, 0xa3, 0xd3, 0xb0,
-	0x77, 0x25, 0x3c, 0x70, 0x19, 0xb1, 0x80, 0x2b, 0x60, 0x13, 0x11, 0x93, 0x6b, 0xd5, 0xad, 0x46,
-	0xa1, 0x57, 0x36, 0xbc, 0xc3, 0x15, 0xdc, 0x89, 0x98, 0x9c, 0x73, 0x7b, 0x27, 0x40, 0x31, 0x51,
-	0x4c, 0x91, 0x44, 0x31, 0x0c, 0x30, 0x73, 0xf3, 0x75, 0xab, 0x51, 0xec, 0x95, 0x35, 0xee, 0xaf,
-	0xa9, 0x53, 0xb3, 0xb7, 0x8c, 0x48, 0x00, 0x6e, 0x41, 0x2b, 0xff, 0x35, 0x18, 0x00, 0x38, 0x67,
-	0xeb, 0x96, 0x00, 0x91, 0xd8, 0x18, 0xc3, 0x91, 0xfb, 0x4f, 0x2b, 0xdb, 0x1a, 0x77, 0x10, 0xe9,
-	0x06, 0xc3, 0x91, 0xd3, 0xb6, 0x2b, 0xc6, 0x8b, 0x40, 0xa8, 0x98, 0x66, 0x2c, 0x05, 0xc9, 0x04,
-	0x46, 0xe0, 0x16, 0xb5, 0xbe, 0xaf, 0xd3, 0x6b, 0x13, 0x76, 0x41, 0xde, 0x62, 0xa4, 0xcb, 0x13,
-	0x9e, 0x31, 0x92, 0x13, 0x45, 0x4c, 0x85, 0x28, 0xc1, 0x2d, 0x99, 0xf2, 0x84, 0x67, 0x83, 0x15,
-	0xed, 0xaf, 0xe0, 0xd5, 0xe9, 0xd7, 0xf3, 0x91, 0xf5, 0xf8, 0xf9, 0x7a, 0x71, 0xb8, 0x39, 0x77,
-	0xf6, 0x3b, 0xb8, 0xd9, 0xa6, 0x73, 0xf9, 0xb6, 0xf0, 0xac, 0xf9, 0xc2, 0xb3, 0x3e, 0x16, 0x9e,
-	0xf5, 0xb4, 0xf4, 0x72, 0xf3, 0xa5, 0x97, 0x7b, 0x5f, 0x7a, 0xb9, 0xfb, 0xda, 0xdf, 0xff, 0x68,
-	0x96, 0x82, 0x0a, 0x4a, 0x7a, 0xe4, 0xf6, 0x77, 0x00, 0x00, 0x00, 0xff, 0xff, 0x3c, 0xad, 0xbc,
-	0xc6, 0xcc, 0x01, 0x00, 0x00,
+	// 354 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x91, 0x41, 0x4b, 0x32, 0x41,
+	0x1c, 0xc6, 0x5d, 0xf7, 0x55, 0x78, 0x27, 0x4a, 0x9d, 0x24, 0x16, 0x8b, 0x4d, 0x8a, 0x42, 0x3a,
+	0xcc, 0x62, 0x12, 0x84, 0x47, 0xa1, 0x7b, 0xac, 0x46, 0xd0, 0xa1, 0x65, 0x5c, 0x07, 0x1d, 0xda,
+	0x9d, 0x91, 0x99, 0x59, 0x75, 0xbf, 0x42, 0xa7, 0x3e, 0x42, 0x1f, 0xa1, 0x8f, 0xd1, 0xd1, 0x4b,
+	0xd0, 0x31, 0xf4, 0x50, 0x1f, 0x23, 0x76, 0xc6, 0xc2, 0xc0, 0xcb, 0xf0, 0x9f, 0x67, 0x7e, 0xcf,
+	0xf0, 0x7f, 0x78, 0xc0, 0x71, 0xc8, 0x99, 0xc2, 0xa1, 0xa2, 0x21, 0x8e, 0x3c, 0x41, 0x70, 0x44,
+	0x55, 0xea, 0x4d, 0x9a, 0xde, 0x18, 0x0b, 0x1c, 0x4b, 0x34, 0x16, 0x5c, 0x71, 0xb8, 0xb7, 0x06,
+	0xa1, 0x15, 0x84, 0x26, 0xcd, 0x5a, 0x05, 0xc7, 0x94, 0x71, 0x4f, 0x9f, 0x06, 0xad, 0x55, 0x87,
+	0x7c, 0xc8, 0xf5, 0xe8, 0x65, 0x93, 0x51, 0x8f, 0xde, 0xf2, 0xa0, 0x78, 0xad, 0x7f, 0x84, 0x0d,
+	0x50, 0x16, 0x64, 0x8a, 0xc5, 0x20, 0xe8, 0x63, 0x49, 0x82, 0x84, 0x51, 0xe5, 0x58, 0x75, 0xab,
+	0x61, 0xfb, 0x3b, 0x46, 0xef, 0x60, 0x49, 0x6e, 0x18, 0x55, 0xf0, 0x14, 0x94, 0x62, 0x3c, 0x0b,
+	0x94, 0x48, 0xa4, 0x0a, 0x64, 0xc8, 0x05, 0x71, 0xf2, 0x1a, 0xdc, 0x8e, 0xf1, 0xac, 0x97, 0xa9,
+	0xdd, 0x4c, 0x84, 0x08, 0xec, 0xc6, 0x94, 0x19, 0x22, 0x50, 0x23, 0x41, 0xe4, 0x88, 0x47, 0x03,
+	0xc7, 0xd6, 0x6c, 0x25, 0xa6, 0x4c, 0x63, 0xbd, 0x9f, 0x07, 0x78, 0x0f, 0xca, 0x92, 0x84, 0x89,
+	0xa0, 0x2a, 0x0d, 0xa6, 0x84, 0x0e, 0x47, 0x4a, 0x3a, 0xff, 0xea, 0x76, 0x63, 0xeb, 0xbc, 0x85,
+	0x36, 0x07, 0x45, 0x66, 0x77, 0xd4, 0x5d, 0xd9, 0x6e, 0x8d, 0xeb, 0x8a, 0x29, 0x91, 0xfa, 0x25,
+	0xf9, 0x57, 0xad, 0x75, 0x40, 0x75, 0x13, 0x08, 0xcb, 0xc0, 0x7e, 0x20, 0xa9, 0x0e, 0xfb, 0xdf,
+	0xcf, 0x46, 0x58, 0x05, 0x85, 0x09, 0x8e, 0x12, 0x93, 0xab, 0xe0, 0x9b, 0x4b, 0x3b, 0x7f, 0x69,
+	0xb5, 0x4f, 0xbe, 0x9e, 0x0f, 0xad, 0xc7, 0xcf, 0x97, 0xb3, 0x83, 0xf5, 0x7e, 0x66, 0xbf, 0x0d,
+	0x99, 0x85, 0x3a, 0x17, 0xaf, 0x0b, 0xd7, 0x9a, 0x2f, 0x5c, 0xeb, 0x63, 0xe1, 0x5a, 0x4f, 0x4b,
+	0x37, 0x37, 0x5f, 0xba, 0xb9, 0xf7, 0xa5, 0x9b, 0xbb, 0xdb, 0xdf, 0xec, 0x53, 0xe9, 0x98, 0xc8,
+	0x7e, 0x51, 0xb7, 0xd2, 0xfa, 0x0e, 0x00, 0x00, 0xff, 0xff, 0xd8, 0xf7, 0xf7, 0xe1, 0xfd, 0x01,
+	0x00, 0x00,
 }
 
 func (this *Params) Equal(that interface{}) bool {
@@ -171,20 +156,19 @@ func (this *Params) Equal(that interface{}) bool {
 	if this.RewardBaseUnit != that1.RewardBaseUnit {
 		return false
 	}
-	if this.BonusStrongbox != that1.BonusStrongbox {
-		return false
-	}
-	if this.BonusTee != that1.BonusTee {
-		return false
-	}
-	if this.BonusBootLock != that1.BonusBootLock {
-		return false
-	}
-	if this.BonusDensityPerNode != that1.BonusDensityPerNode {
-		return false
-	}
 	if this.MaxTrustScore != that1.MaxTrustScore {
 		return false
+	}
+	if this.MinScoreThreshold != that1.MinScoreThreshold {
+		return false
+	}
+	if len(this.SecurityWeights) != len(that1.SecurityWeights) {
+		return false
+	}
+	for i := range this.SecurityWeights {
+		if this.SecurityWeights[i] != that1.SecurityWeights[i] {
+			return false
+		}
 	}
 	return true
 }
@@ -208,28 +192,30 @@ func (m *Params) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.MaxTrustScore != 0 {
-		i = encodeVarintParams(dAtA, i, uint64(m.MaxTrustScore))
-		i--
-		dAtA[i] = 0x30
+	if len(m.SecurityWeights) > 0 {
+		for k := range m.SecurityWeights {
+			v := m.SecurityWeights[k]
+			baseI := i
+			i = encodeVarintParams(dAtA, i, uint64(v))
+			i--
+			dAtA[i] = 0x10
+			i -= len(k)
+			copy(dAtA[i:], k)
+			i = encodeVarintParams(dAtA, i, uint64(len(k)))
+			i--
+			dAtA[i] = 0xa
+			i = encodeVarintParams(dAtA, i, uint64(baseI-i))
+			i--
+			dAtA[i] = 0x22
+		}
 	}
-	if m.BonusDensityPerNode != 0 {
-		i = encodeVarintParams(dAtA, i, uint64(m.BonusDensityPerNode))
-		i--
-		dAtA[i] = 0x28
-	}
-	if m.BonusBootLock != 0 {
-		i = encodeVarintParams(dAtA, i, uint64(m.BonusBootLock))
-		i--
-		dAtA[i] = 0x20
-	}
-	if m.BonusTee != 0 {
-		i = encodeVarintParams(dAtA, i, uint64(m.BonusTee))
+	if m.MinScoreThreshold != 0 {
+		i = encodeVarintParams(dAtA, i, uint64(m.MinScoreThreshold))
 		i--
 		dAtA[i] = 0x18
 	}
-	if m.BonusStrongbox != 0 {
-		i = encodeVarintParams(dAtA, i, uint64(m.BonusStrongbox))
+	if m.MaxTrustScore != 0 {
+		i = encodeVarintParams(dAtA, i, uint64(m.MaxTrustScore))
 		i--
 		dAtA[i] = 0x10
 	}
@@ -261,20 +247,19 @@ func (m *Params) Size() (n int) {
 	if m.RewardBaseUnit != 0 {
 		n += 1 + sovParams(uint64(m.RewardBaseUnit))
 	}
-	if m.BonusStrongbox != 0 {
-		n += 1 + sovParams(uint64(m.BonusStrongbox))
-	}
-	if m.BonusTee != 0 {
-		n += 1 + sovParams(uint64(m.BonusTee))
-	}
-	if m.BonusBootLock != 0 {
-		n += 1 + sovParams(uint64(m.BonusBootLock))
-	}
-	if m.BonusDensityPerNode != 0 {
-		n += 1 + sovParams(uint64(m.BonusDensityPerNode))
-	}
 	if m.MaxTrustScore != 0 {
 		n += 1 + sovParams(uint64(m.MaxTrustScore))
+	}
+	if m.MinScoreThreshold != 0 {
+		n += 1 + sovParams(uint64(m.MinScoreThreshold))
+	}
+	if len(m.SecurityWeights) > 0 {
+		for k, v := range m.SecurityWeights {
+			_ = k
+			_ = v
+			mapEntrySize := 1 + len(k) + sovParams(uint64(len(k))) + 1 + sovParams(uint64(v))
+			n += mapEntrySize + 1 + sovParams(uint64(mapEntrySize))
+		}
 	}
 	return n
 }
@@ -335,82 +320,6 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 			}
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BonusStrongbox", wireType)
-			}
-			m.BonusStrongbox = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowParams
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.BonusStrongbox |= int32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BonusTee", wireType)
-			}
-			m.BonusTee = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowParams
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.BonusTee |= int32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 4:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BonusBootLock", wireType)
-			}
-			m.BonusBootLock = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowParams
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.BonusBootLock |= int32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 5:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BonusDensityPerNode", wireType)
-			}
-			m.BonusDensityPerNode = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowParams
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.BonusDensityPerNode |= int32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 6:
-			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field MaxTrustScore", wireType)
 			}
 			m.MaxTrustScore = 0
@@ -423,11 +332,143 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.MaxTrustScore |= int32(b&0x7F) << shift
+				m.MaxTrustScore |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MinScoreThreshold", wireType)
+			}
+			m.MinScoreThreshold = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.MinScoreThreshold |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SecurityWeights", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.SecurityWeights == nil {
+				m.SecurityWeights = make(map[string]int32)
+			}
+			var mapkey string
+			var mapvalue int32
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowParams
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					wire |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					var stringLenmapkey uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowParams
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						stringLenmapkey |= uint64(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					intStringLenmapkey := int(stringLenmapkey)
+					if intStringLenmapkey < 0 {
+						return ErrInvalidLengthParams
+					}
+					postStringIndexmapkey := iNdEx + intStringLenmapkey
+					if postStringIndexmapkey < 0 {
+						return ErrInvalidLengthParams
+					}
+					if postStringIndexmapkey > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapkey = string(dAtA[iNdEx:postStringIndexmapkey])
+					iNdEx = postStringIndexmapkey
+				} else if fieldNum == 2 {
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowParams
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapvalue |= int32(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipParams(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if (skippy < 0) || (iNdEx+skippy) < 0 {
+						return ErrInvalidLengthParams
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
+				}
+			}
+			m.SecurityWeights[mapkey] = mapvalue
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipParams(dAtA[iNdEx:])
