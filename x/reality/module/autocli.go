@@ -41,10 +41,15 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
                     Skip:      true, // skipped because authority gated
                 },
                 {
-                    RpcMethod:      "CreateClaim",
-                    Use:            "create-claim [sensor-hash] [gnss-hash] [anchor-signature]",
-                    Short:          "Send a create-claim tx",
-                    PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "sensor_hash"}, {ProtoField: "gnss_hash"}, {ProtoField: "anchor_signature"}},
+                    RpcMethod: "CreateClaim",
+                    Use:       "create-claim [sensor-hash] [gnss-hash] [anchor-signature] [nearby-nodes...]",
+                    Short:     "Send a create-claim tx",
+                    PositionalArgs: []*autocliv1.PositionalArgDescriptor{
+                        {ProtoField: "sensor_hash"},
+                        {ProtoField: "gnss_hash"},
+                        {ProtoField: "anchor_signature"},
+                        {ProtoField: "nearby_nodes", Varargs: true},
+                    },
                 },
                 {
                     RpcMethod: "Swap",

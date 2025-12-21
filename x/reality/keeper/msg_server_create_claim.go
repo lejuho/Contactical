@@ -3,6 +3,7 @@ package keeper
 import (
     "context"
     "fmt"
+    "strconv"
     "strings"
 
     "contactical/x/reality/types"
@@ -12,6 +13,16 @@ import (
 
 func (k msgServer) CreateClaim(goCtx context.Context, msg *types.MsgCreateClaim) (*types.MsgCreateClaimResponse, error) {
     ctx := sdk.UnwrapSDKContext(goCtx)
+
+    // Parse latitude and longitude from string to float64
+    lat, err := strconv.ParseFloat(msg.Latitude, 64)
+    if err != nil {
+        return nil, fmt.Errorf("invalid latitude: %w", err)
+    }
+    lng, err := strconv.ParseFloat(msg.Longitude, 64)
+    if err != nil {
+        return nil, fmt.Errorf("invalid longitude: %w", err)
+    }
 
     // [신규] 현재 체인의 보상 정책(Params)을 가져옵니다.
     params, err := k.GetParams(ctx)
@@ -76,6 +87,8 @@ func (k msgServer) CreateClaim(goCtx context.Context, msg *types.MsgCreateClaim)
 
     // [4] 데이터 저장
     var claim = types.Claim{
+        Latitude:         lat,
+        Longitude:        lng,
         Creator:          msg.Creator,
         SensorHash:       msg.SensorHash,
         DataSignature:    msg.DataSignature,
