@@ -17,4 +17,6 @@ message NodeInfo {
   int64 registered_at = 9;         // Block height when registered
   // [수정] bytes -> string
   string pub_key = 10; // 필드 번호는 본인 파일에 맞게 유지
+  string nullifier = 11;           // ZK-JWT nullifier (prevents double registration)
+  int32 trust_tier = 12;           // Trust tier derived from verification (e.g., 1=Basic, 2=ZK-Google)
 }

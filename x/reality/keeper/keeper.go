@@ -29,6 +29,7 @@ type Keeper struct {
 	ClaimSeq      collections.Sequence
 	Claim         collections.Map[uint64, types.Claim]
 	NodeInfo      collections.Map[string, types.NodeInfo]
+	Nullifiers    collections.KeySet[string]
 
 	// [New] Plugin Registry
 	verifiers []Verifier
@@ -68,6 +69,7 @@ func NewKeeper(
 		Claim:         collections.NewMap(sb, types.ClaimKey, "claim", collections.Uint64Key, codec.CollValue[types.Claim](cdc)),
 		ClaimSeq:      collections.NewSequence(sb, types.ClaimCountKey, "claimSequence"),
 		NodeInfo:      collections.NewMap(sb, types.NodeInfoKey, "nodeInfo", collections.StringKey, codec.CollValue[types.NodeInfo](cdc)),
+		Nullifiers:    collections.NewKeySet(sb, types.NullifierKey, "nullifiers", collections.StringKey),
 		verifiers:     []Verifier{},
 	}
 	schema, err := sb.Build()

@@ -102,6 +102,12 @@ message MsgRegisterNode {
 
   // [핵심 수정 3] Go 코드의 msg.PubKey와 맞춤
   string pub_key = 4;
+
+  // [ZK-JWT 추가] 
+  bytes zk_proof = 5;       // Groth16 proof
+  string nullifier = 6;     // Nullifier to prevent replay/double-spending
+  string jwt_aud = 7;       // JWT Audience (to verify it's for this app)
+  repeated string public_signals = 8; // Public signals for ZK verification
 }
 
 // MsgRegisterNodeResponse defines the MsgRegisterNodeResponse message.

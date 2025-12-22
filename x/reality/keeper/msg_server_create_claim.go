@@ -18,10 +18,11 @@ import (
 func (k msgServer) CreateClaim(goCtx context.Context, msg *types.MsgCreateClaim) (*types.MsgCreateClaimResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// [수정] NodeId를 통해 등록된 기기 정보 조회 (보상 대상이자 검증 주체)
-	nodeInfo, err := k.NodeInfo.Get(ctx, msg.NodeId)
+	// [수정] NodeId 대신 Creator를 키로 사용하여 등록된 기기 정보 조회
+	// (NodeId 필드는 레거시 혹은 디바이스 고유 ID로 취급)
+	nodeInfo, err := k.NodeInfo.Get(ctx, msg.Creator)
 	if err != nil {
-		return nil, fmt.Errorf("등록되지 않은 노드(기기)입니다. NodeId=%s: %w", msg.NodeId, err)
+		return nil, fmt.Errorf("등록되지 않은 노드(기기)입니다. Creator=%s: %w", msg.Creator, err)
 	}
 
 	// 파라미터 조회
@@ -41,15 +42,25 @@ func (k msgServer) CreateClaim(goCtx context.Context, msg *types.MsgCreateClaim)
 	isDevMode := true
 	var attResult AttestationResult
 
-	if isDevMode {
-		ctx.Logger().Info("⚠️ [DevMode] Skipping TEE & Signature Verification")
+	// [ZK-JWT] TrustTier 확인
+	isZkVerified := nodeInfo.TrustTier >= 2
+
+	if isDevMode || isZkVerified {
+		// ZK 인증된 기기이거나 Dev모드면 TEE 검증 패스 (또는 간소화)
+		if isDevMode {
+			ctx.Logger().Info("⚠️ [DevMode] Skipping TEE & Signature Verification")
+		} else {
+			ctx.Logger().Info("🔐 [ZK-Verified] Trusting node based on ZK-JWT tier")
+		}
+		
 		attResult = AttestationResult{
-			IsHardwareBacked: true,
-			IsStrongBox:      true,
+			IsHardwareBacked: true, // ZK 인증도 하드웨어 백킹된 것으로 간주(가정)
+			IsStrongBox:      isZkVerified, // ZK 인증은 높은 보안 수준으로 취급
 			OSVersion:        140000,
 			VerifiedBoot:     "Verified",
 		}
 	} else {
+		// [Legacy] 일반 TEE 기기 검증 로직
 		// 1. [재전송 공격 방지] 타임스탬프 검증 (±2분)
 		blockTime := ctx.BlockTime().Unix()
 		validityWindow := int64(120)
@@ -77,6 +88,11 @@ func (k msgServer) CreateClaim(goCtx context.Context, msg *types.MsgCreateClaim)
 
 	// 신뢰 점수 계산
 	var totalScore int64 = 0
+
+	// ZK 인증이면 기본적으로 높은 점수 부여
+	if isZkVerified {
+		totalScore += 500 // ZK-Bonus (Configurable parameter로 빼는 게 좋음)
+	}
 
 	if attResult.IsStrongBox {
 		totalScore += getWeight("strongbox")

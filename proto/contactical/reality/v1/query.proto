@@ -35,9 +35,14 @@ service Query {
   }
 
   // service Query에 추가
-rpc AllNodeInfo(QueryAllNodeInfoRequest) returns (QueryAllNodeInfoResponse) {
-  option (google.api.http).get = "/contactical/reality/node_info";
-}
+  rpc AllNodeInfo(QueryAllNodeInfoRequest) returns (QueryAllNodeInfoResponse) {
+    option (google.api.http).get = "/contactical/reality/node_info";
+  }
+
+  // HasNullifier queries if a nullifier has already been used
+  rpc HasNullifier(QueryHasNullifierRequest) returns (QueryHasNullifierResponse) {
+    option (google.api.http).get = "/contactical/reality/v1/nullifier/{nullifier}";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -92,4 +97,12 @@ message QueryAllNodeInfoResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
+// QueryHasNullifierRequest defines the QueryHasNullifierRequest message.
+message QueryHasNullifierRequest {
+  string nullifier = 1;
+}
 
+// QueryHasNullifierResponse defines the QueryHasNullifierResponse message.
+message QueryHasNullifierResponse {
+  bool has_nullifier = 1;
+}

@@ -22,4 +22,5 @@ var (
 	ClaimKey      = collections.NewPrefix("claim/value/")
 	ClaimCountKey = collections.NewPrefix("claim/count/")
 	NodeInfoKey   = collections.NewPrefix("node/info/")
+	NullifierKey  = collections.NewPrefix("node/nullifier/")
 )

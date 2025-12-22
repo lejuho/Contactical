@@ -17,6 +17,21 @@ func (k Keeper) InitGenesis(ctx context.Context, genState types.GenesisState) er
 	if err := k.ClaimSeq.Set(ctx, genState.ClaimCount); err != nil {
 		return err
 	}
+
+	// Set all the nodeInfo
+	for _, elem := range genState.NodeList {
+		if err := k.NodeInfo.Set(ctx, elem.Creator, elem); err != nil {
+			return err
+		}
+	}
+
+	// Set all the nullifier
+	for _, elem := range genState.NullifierList {
+		if err := k.Nullifiers.Set(ctx, elem); err != nil {
+			return err
+		}
+	}
+
 	return k.Params.Set(ctx, genState.Params)
 }
 
@@ -38,6 +53,24 @@ func (k Keeper) ExportGenesis(ctx context.Context) (*types.GenesisState, error) 
 	}
 
 	genesis.ClaimCount, err = k.ClaimSeq.Peek(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get all nodeInfo
+	err = k.NodeInfo.Walk(ctx, nil, func(key string, elem types.NodeInfo) (bool, error) {
+		genesis.NodeList = append(genesis.NodeList, elem)
+		return false, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// Get all nullifier
+	err = k.Nullifiers.Walk(ctx, nil, func(key string) (bool, error) {
+		genesis.NullifierList = append(genesis.NullifierList, key)
+		return false, nil
+	})
 	if err != nil {
 		return nil, err
 	}
