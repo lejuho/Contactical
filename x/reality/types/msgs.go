@@ -4,6 +4,10 @@ package types
 import (
 	"fmt"
 	"regexp"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	errorsmod "cosmossdk.io/errors"
 )
 
 func (msg MsgCreateClaim) ValidateBasic() error {
@@ -22,4 +26,20 @@ func (msg MsgCreateClaim) ValidateBasic() error {
 	//     return fmt.Errorf("anchor signature cannot be empty")
 	// }
 	return nil
+}
+
+func (msg *MsgRegisterNode) ValidateBasic() error {
+	_, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		return errorsmod.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+	}
+	return nil
+}
+
+func (msg *MsgRegisterNode) GetSigners() []sdk.AccAddress {
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{creator}
 }
