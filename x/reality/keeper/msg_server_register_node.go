@@ -14,6 +14,9 @@ import (
 func (k msgServer) RegisterNode(goCtx context.Context, msg *types.MsgRegisterNode) (*types.MsgRegisterNodeResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	// [DEBUG LOG]
+    fmt.Printf("⛓️ [CHAIN] RegisterNode Called! Creator: %s, PubKey: %s\n", msg.Creator, msg.PubKey)
+
 	ctx.Logger().Info("📥 RegisterNode received",
 		"creator", msg.Creator,
 		"zk_mode", len(msg.Nullifier) > 0,
@@ -87,6 +90,9 @@ func (k msgServer) RegisterNode(goCtx context.Context, msg *types.MsgRegisterNod
 	if err := k.NodeInfo.Set(ctx, msg.Creator, *nodeInfo); err != nil {
 		return nil, status.Errorf(codes.Internal, "노드 정보 저장 실패: %v", err)
 	}
+
+	// [DEBUG LOG]
+    fmt.Println("⛓️ [CHAIN] Node Saved to Store!")
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
